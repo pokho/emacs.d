@@ -140,6 +140,8 @@
 (require 'init-lua)
 (require 'init-uiua)
 (require 'init-terminals)
+(require 'init-gptel)
+(require 'init-org-roam)
 
 ;; Extra packages which don't require any configuration
 

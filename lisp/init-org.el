@@ -54,6 +54,18 @@
 
 ;; Lots of stuff from http://doc.norang.ca/org-mode.html
 
+
+;; Ensure pdf-tools is loaded
+(require 'pdf-tools)
+(pdf-tools-install) ;; This compiles the native backend for pdf-tools
+
+;; Ensure org-pdftools is loaded and set up the hook
+(require 'org-pdftools)
+(add-hook 'pdf-view-mode 'org-pdftools-setup-link)
+
+;; Prioritize pdf-view-mode for PDF files
+(add-to-list 'auto-mode-alist '("\.pdf\'" . pdf-view-mode))
+
 ;; Re-align tags when window shape changes
 (with-eval-after-load 'org-agenda
   (add-hook 'org-agenda-mode-hook
@@ -111,11 +123,13 @@ typical word processor."
 (global-set-key (kbd "C-c c") 'org-capture)
 
 (setq org-capture-templates
-      `(("t" "todo" entry (file "")  ; "" => `org-default-notes-file'
-         "* NEXT %?\n%U\n" :clock-resume t)
-        ("n" "note" entry (file "")
-         "* %? :NOTE:\n%U\n%a\n" :clock-resume t)
-        ))
+      '(("t" "Todo" entry (file "~/org/inbox.org")
+         "* TODO %?\n  %i\n  %a" :empty-lines 1)
+        ("n" "Note" entry (file "~/org/inbox.org")
+         "* %? \n  %i\n  %a" :empty-lines 1)
+        ("m" "Meeting" entry (file "~/org/inbox.org")
+         "* MEETING: %? :meeting:\n  SCHEDULED: %t\n\n** Attendees:\n\n** Notes:\n\n** Action Items:\n  - [ ] "
+     :empty-lines 1)))
 
 
 
