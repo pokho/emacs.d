@@ -25,8 +25,8 @@
                   :key (lambda () (auth-source-pass-get 'machine "api.anthropic.com" 'login "gptel"))
                   :models '("claude-3-opus-20240229" "claude-3-sonnet-20240229" "claude-2.1")))
     (:gemini . ,(gptel-make-google "Google Gemini"
-                                   :key (lambda () (auth-source-pass-get 'machine "generativelanguage.googleapis.com" 'login "gptel"))
-                                   :models '("gemini-1.5-pro-latest" "gemini-pro")))
+                :key (lambda () (auth-source-pass-get 'machine "generativelanguage.googleapis.com" 'login "gptel"))
+                 :models '("gemini-1.5-pro-latest" "gemini-pro")))
     (:grok . ,(gptel-make-xai "Grok (xAI)"
                 :key (lambda () (auth-source-pass-get 'machine "api.x.ai" 'login "gptel"))
                 :models '("grok-1.5" "grok-1")))
