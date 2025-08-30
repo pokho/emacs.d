@@ -124,7 +124,7 @@
           :category "filesystem"
           :function (lambda (pattern &optional path) (directory-files-recursively (or path default-directory) pattern))
           :args (list '(:name "pattern" :type 'string :description "The regex pattern to search for.")
-                  '(:name "path" :type 'string :description "The directory to search in.")))
+                      '(:name "path" :type 'string :description "The directory to search in.")))
          (gptel-make-tool
           :name "file_read"
           :description "Read the contents of one or more files"
@@ -137,7 +137,7 @@
           :category "filesystem"
           :function (lambda (path content) (with-temp-file path (insert content)) "File written.")
           :args (list '(:name "path" :type 'string :description "The path of the file to write to.")
-                  '(:name "content" :type 'string :description "The content to write to the file.")))
+                      '(:name "content" :type 'string :description "The content to write to the file.")))
          (gptel-make-tool
           :name "file_delete"
           :description "Delete a file"
@@ -158,7 +158,7 @@
                               (push file results))))
                         results))
           :args (list '(:name "pattern" :type 'string :description "The regex pattern to search for.")
-                  '(:name "path" :type 'string :description "The directory to search in.")))
+                      '(:name "path" :type 'string :description "The directory to search in.")))
          (gptel-make-tool
           :name "text_edit"
           :description "Edit a text file by replacing a pattern"
@@ -172,8 +172,8 @@
                         (write-region (point-min) (point-max) path))
                       "Text replaced.")
           :args (list '(:name "path" :type 'string :description "The path of the file to edit.")
-                  '(:name "pattern" :type 'string :description "The regex pattern to replace.")
-                  '(:name "replacement" :type 'string :description "The replacement text.")))
+                      '(:name "pattern" :type 'string :description "The regex pattern to replace.")
+                      '(:name "replacement" :type 'string :description "The replacement text.")))
          (gptel-make-tool
           :name "web_search"
           :description "Search the web for a query"
@@ -215,188 +215,188 @@
                             "Replaced active region with new text.")
                         (insert content)
                         "Inserted text at point.")))
-          :args (list '(:name "content" :type 'string :description "The content to insert or replace with.")))))
+         :args (list '(:name "content" :type 'string :description "The content to insert or replace with.")))))
 
-  ;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
-  ;; Architect: Systems and scalability expert
-  (gptel-make-preset 'architect
-    :description "Systems architect: Designs for long-term maintainability, scalability, and modularity. Analyzes whole-system impacts and dependencies."
-    :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
-    :keywords '("architecture" "design" "scalability" "modularity" "dependency")
-    :quality '("maintainability" "scalability" "modularity")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :avoid-backends '("Magic")
-    :tools '("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
+;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
+;; Architect: Systems and scalability expert
+(gptel-make-preset 'architect
+  :description "Systems architect: Designs for long-term maintainability, scalability, and modularity. Analyzes whole-system impacts and dependencies."
+  :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
+  :keywords '("architecture" "design" "scalability" "modularity" "dependency")
+  :quality '("maintainability" "scalability" "modularity")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :avoid-backends '("Magic")
+  :tools '("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
+  )
 
-  ;; Frontend: UX and accessibility specialist
-  (gptel-make-preset 'frontend
-    :description "Frontend developer: User-centered, accessibility-focused, and performance-conscious. Delivers intuitive, performant, and compliant UIs."
-    :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
-    :keywords '("component" "responsive" "accessibility" "ui" "design system")
-    :quality '("usability" "accessibility" "performance")
-    :backend "Magic"
-    :secondary-backends '("Playwright")
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-    )
+;; Frontend: UX and accessibility specialist
+(gptel-make-preset 'frontend
+  :description "Frontend developer: User-centered, accessibility-focused, and performance-conscious. Delivers intuitive, performant, and compliant UIs."
+  :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
+  :keywords '("component" "responsive" "accessibility" "ui" "design system")
+  :quality '("usability" "accessibility" "performance")
+  :backend "Magic"
+  :secondary-backends '("Playwright")
+  :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
+  )
 
-  ;; Backend: Reliability and security engineer
-  (gptel-make-preset 'backend
-    :description "Backend engineer: Focuses on reliability, security, and robust APIs. Ensures fault tolerance, consistency, and secure data flows."
-    :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
-    :keywords '("API" "database" "service" "reliability" "backend" "security")
-    :quality '("reliability" "security" "data integrity")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
-    :avoid-backends '("Magic")
-    :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; Backend: Reliability and security engineer
+(gptel-make-preset 'backend
+  :description "Backend engineer: Focuses on reliability, security, and robust APIs. Ensures fault tolerance, consistency, and secure data flows."
+  :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
+  :keywords '("API" "database" "service" "reliability" "backend" "security")
+  :quality '("reliability" "security" "data integrity")
+  :backend "Context7"
+  :secondary-backends '("Sequential")
+  :avoid-backends '("Magic")
+  :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; Analyzer: Evidence-based root cause specialist
-  (gptel-make-preset 'analyzer
-    :description "Root cause analyst: Evidence-driven and systematic. Investigates, troubleshoots, and explains with supporting data."
-    :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
-    :keywords '("analyze" "investigate" "root cause" "debug" "evidence" "troubleshoot")
-    :quality '("evidence-based" "systematic" "thoroughness")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :tools '("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; Analyzer: Evidence-based root cause specialist
+(gptel-make-preset 'analyzer
+  :description "Root cause analyst: Evidence-driven and systematic. Investigates, troubleshoots, and explains with supporting data."
+  :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
+  :keywords '("analyze" "investigate" "root cause" "debug" "evidence" "troubleshoot")
+  :quality '("evidence-based" "systematic" "thoroughness")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :tools '("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; Security: Threat, compliance, and vulnerability specialist
-  (gptel-make-preset 'security
-    :description "Security/compliance expert: Defense in depth, zero trust, and secure-by-default. Assesses threats, enforces compliance, and documents measures."
-    :system "You are a security and compliance specialist. Prioritize security, enforce compliance, and implement layered defenses. Document and justify all security decisions."
-    :keywords '("vulnerability" "threat" "compliance" "security" "authorization" "authentication")
-    :quality '("security" "compliance" "transparency")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :avoid-backends '("Magic")
-    :tools '("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; Security: Threat, compliance, and vulnerability specialist
+(gptel-make-preset 'security
+  :description "Security/compliance expert: Defense in depth, zero trust, and secure-by-default. Assesses threats, enforces compliance, and documents measures."
+  :system "You are a security and compliance specialist. Prioritize security, enforce compliance, and implement layered defenses. Document and justify all security decisions."
+  :keywords '("vulnerability" "threat" "compliance" "security" "authorization" "authentication")
+  :quality '("security" "compliance" "transparency")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :avoid-backends '("Magic")
+  :tools '("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; Mentor: Knowledge transfer and education
-  (gptel-make-preset 'mentor
-    :description "Mentor: Prioritizes understanding, knowledge transfer, and teaching. Explains methodology and empowers users."
-    :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor advice to the learner’s goals and understanding."
-    :keywords '("explain" "learn" "understand" "guide" "teach")
-    :quality '("clarity" "completeness" "engagement")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
-    :tools '("file_read" "buffer_read" "web_search" "web_summarise_url")
-    )
+;; Mentor: Knowledge transfer and education
+(gptel-make-preset 'mentor
+  :description "Mentor: Prioritizes understanding, knowledge transfer, and teaching. Explains methodology and empowers users."
+  :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor advice to the learner’s goals and understanding."
+  :keywords '("explain" "learn" "understand" "guide" "teach")
+  :quality '("clarity" "completeness" "engagement")
+  :backend "Context7"
+  :secondary-backends '("Sequential")
+  :tools '("file_read" "buffer_read" "web_search" "web_summarise_url")
+  )
 
-  ;; Refactorer: Code quality and debt manager
-  (gptel-make-preset 'refactorer
-    :description "Code refactorer: Advocates for simplicity, maintainability, and clean code. Systematically improves code quality."
-    :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt."
-    :keywords '("refactor" "cleanup" "technical debt" "maintainability" "simplicity")
-    :quality '("readability" "simplicity" "consistency")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
+;; Refactorer: Code quality and debt manager
+(gptel-make-preset 'refactorer
+  :description "Code refactorer: Advocates for simplicity, maintainability, and clean code. Systematically improves code quality."
+  :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt."
+  :keywords '("refactor" "cleanup" "technical debt" "maintainability" "simplicity")
+  :quality '("readability" "simplicity" "consistency")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
+  )
 
-  ;; Performance: Optimization and bottleneck expert
-  (gptel-make-preset 'performance
-    :description "Performance optimizer: Metrics-driven, bottleneck-focused, user-experience-centric. Measures and optimizes where it matters."
-    :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
-    :keywords '("optimize" "performance" "bottleneck" "speed" "efficiency")
-    :quality '("measurement-based" "user-focused" "systematic")
-    :backend "Playwright"
-    :secondary-backends '("Sequential")
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; Performance: Optimization and bottleneck expert
+(gptel-make-preset 'performance
+  :description "Performance optimizer: Metrics-driven, bottleneck-focused, user-experience-centric. Measures and optimizes where it matters."
+  :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
+  :keywords '("optimize" "performance" "bottleneck" "speed" "efficiency")
+  :quality '("measurement-based" "user-focused" "systematic")
+  :backend "Playwright"
+  :secondary-backends '("Sequential")
+  :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; QA: Testing, validation, and edge case detective
-  (gptel-make-preset 'qa
-    :description "QA/testing specialist: Prevents defects, ensures comprehensive coverage, and detects edge cases. Designs robust testing strategies."
-    :system "You are a QA/testing expert. Focus on defect prevention, comprehensive edge case coverage, and risk-based testing strategies."
-    :keywords '("test" "quality" "validation" "edge case" "qa")
-    :quality '("comprehensive" "risk-based" "preventive")
-    :backend "Playwright"
-    :secondary-backends '("Sequential")
-    :tools '("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; QA: Testing, validation, and edge case detective
+(gptel-make-preset 'qa
+  :description "QA/testing specialist: Prevents defects, ensures comprehensive coverage, and detects edge cases. Designs robust testing strategies."
+  :system "You are a QA/testing expert. Focus on defect prevention, comprehensive edge case coverage, and risk-based testing strategies."
+  :keywords '("test" "quality" "validation" "edge case" "qa")
+  :quality '("comprehensive" "risk-based" "preventive")
+  :backend "Playwright"
+  :secondary-backends '("Sequential")
+  :tools '("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; DevOps: Infrastructure, automation, and deployment
-  (gptel-make-preset 'devops
-    :description "DevOps/infra specialist: Automates, observes, and ensures reliability. Implements IaC, monitoring, and deployment best practices."
-    :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability."
-    :keywords '("deploy" "infrastructure" "automation" "monitoring" "observability")
-    :quality '("automation" "observability" "reliability")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+;; DevOps: Infrastructure, automation, and deployment
+(gptel-make-preset 'devops
+  :description "DevOps/infra specialist: Automates, observes, and ensures reliability. Implements IaC, monitoring, and deployment best practices."
+  :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability."
+  :keywords '("deploy" "infrastructure" "automation" "monitoring" "observability")
+  :quality '("automation" "observability" "reliability")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+  )
 
-  ;; Scribe: Professional technical writer and localization
-  (gptel-make-preset 'scribe
-                   :description "Technical writer: Audience-first, clear, and culturally sensitive documentation. Supports multilingual and professional standards."
-                   :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
-                   :keywords '("document" "write" "guide" "localization" "communication" "docs")
-                   :quality '("clarity" "cultural sensitivity" "professional excellence")
-                   :backend "Context7"
-                   :secondary-backends '("Sequential")
-                   :tools '("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-                   )
+;; Scribe: Professional technical writer and localization
+(gptel-make-preset 'scribe
+  :description "Technical writer: Audience-first, clear, and culturally sensitive documentation. Supports multilingual and professional standards."
+  :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
+  :keywords '("document" "write" "guide" "localization" "communication" "docs")
+  :quality '("clarity" "cultural sensitivity" "professional excellence")
+  :backend "Context7"
+  :secondary-backends '("Sequential")
+  :tools '("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
+  )
 
-  ;; Business Leader: CEO/CFO/COO
-  (gptel-make-preset 'business-lead
-                   :description "Executive leader (CEO/CFO/COO): Strategic, financial, high-level direction. Focuses on growth, risk, and overall business health."
-                   :system "You are a business leader (CEO, CFO, COO). Prioritize strategic vision, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals."
-                   :keywords '("strategy" "finance" "growth" "risk" "investment" "roadmap" "KPI")
-                   :quality '("strategic thinking" "clarity" "risk management")
-                   :backend "Context7"
-                   :secondary-backends '("Sequential")
-                   :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-                   )
+;; Business Leader: CEO/CFO/COO
+(gptel-make-preset 'business-lead
+  :description "Executive leader (CEO/CFO/COO): Strategic, financial, high-level direction. Focuses on growth, risk, and overall business health."
+  :system "You are a business leader (CEO, CFO, COO). Prioritize strategic vision, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals."
+  :keywords '("strategy" "finance" "growth" "risk" "investment" "roadmap" "KPI")
+  :quality '("strategic thinking" "clarity" "risk management")
+  :backend "Context7"
+  :secondary-backends '("Sequential")
+  :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+  )
 
-  ;; Customer-Facing: Branding, Marketing, Sales
-  (gptel-make-preset 'customer-lead
-                   :description "Customer-facing (branding, marketing, sales): Brand voice, campaign creation, sales enablement. Focuses on audience engagement and conversion."
-                   :system "You are a customer-facing specialist in branding, marketing, or sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
-                   :keywords '("branding" "marketing" "campaign" "sales" "customer" "engagement" "conversion")
-                   :quality '("audience focus" "persuasion" "brand consistency")
-                   :backend "Magic"
-                   :secondary-backends '("Context7")
-                   :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-                   )
+;; Customer-Facing: Branding, Marketing, Sales
+(gptel-make-preset 'customer-lead
+  :description "Customer-facing (branding, marketing, sales): Brand voice, campaign creation, sales enablement. Focuses on audience engagement and conversion."
+  :system "You are a customer-facing specialist in branding, marketing, or sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
+  :keywords '("branding" "marketing" "campaign" "sales" "customer" "engagement" "conversion")
+  :quality '("audience focus" "persuasion" "brand consistency")
+  :backend "Magic"
+  :secondary-backends '("Context7")
+  :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+  )
 
-  ;; Organisational: Legal, Board, Partnership/Alliance
-  (gptel-make-preset 'org-lead
-                   :description "Organisational (legal, board, partnership): Legal compliance, governance, alliances. Ensures regulations, contracts, and policies are upheld."
-                   :system "You are an organisational specialist for legal, board, or partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
-                   :keywords '("legal" "compliance" "policy" "contract" "board" "governance" "partnership" "alliance")
-                   :quality '("compliance" "clarity" "risk mitigation")
-                   :backend "Sequential"
-                   :secondary-backends '("Context7")
-                   :tools '("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-                   )
+;; Organisational: Legal, Board, Partnership/Alliance
+(gptel-make-preset 'org-lead
+  :description "Organisational (legal, board, partnership): Legal compliance, governance, alliances. Ensures regulations, contracts, and policies are upheld."
+  :system "You are an organisational specialist for legal, board, or partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
+  :keywords '("legal" "compliance" "policy" "contract" "board" "governance" "partnership" "alliance")
+  :quality '("compliance" "clarity" "risk mitigation")
+  :backend "Sequential"
+  :secondary-backends '("Context7")
+  :tools '("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+  )
 
-  ;; Set the default model
+;; Set the default model
 
-  ;; (setq
-  ;;  gptel-model 'gemini-2.5-pro-exp-03-25
-  ;;  gptel-backend (gptel-make-gemini "Gemini"
-  ;;                  :key gptel-api-key
-  ;;                  :stream t))
+;; (setq
+;;  gptel-model 'gemini-2.5-pro-exp-03-25
+;;  gptel-backend (gptel-make-gemini "Gemini"
+;;                  :key gptel-api-key
+;;                  :stream t))
 
-  (setq gptel-model   'z-ai/glm-4.5-air:free
-        gptel-backend
-        (gptel-make-openai "OpenRouter"   ;Any name you want
-          :host "openrouter.ai"
-          :endpoint "/api/v1/chat/completions"
-          :stream t
-          :key gptel-api-key
-          :models '(z-ai/glm-4.5-air:free
-                    openai/gpt-3.5-turbo
-                    mistralai/mixtral-8x7b-instruct
-                    meta-llama/codellama-34b-instruct
-                    codellama/codellama-70b-instruct
-                    google/palm-2-codechat-bison-32k
-                    google/gemini-pro))))
+(setq gptel-model   'z-ai/glm-4.5-air:free
+      gptel-backend
+      (gptel-make-openai "OpenRouter"   ;Any name you want
+        :host "openrouter.ai"
+        :endpoint "/api/v1/chat/completions"
+        :stream t
+        :key gptel-api-key
+        :models '(z-ai/glm-4.5-air:free
+                  openai/gpt-3.5-turbo
+                  mistralai/mixtral-8x7b-instruct
+                  meta-llama/codellama-34b-instruct
+                  codellama/codellama-70b-instruct
+                  google/palm-2-codechat-bison-32k
+                  google/gemini-pro))))
 
 
 (provide 'init-gptel)
