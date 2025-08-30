@@ -104,143 +104,118 @@
 
   ;; Make gptel tools
   (setq gptel-use-tools t)
-  (setq gptel-tools nil) ; Clear existing tools
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'folder_read
-                :description "List all files and subfolders in a folder"
-                :category "filesystem"
-                :function (lambda (path) (directory-files path t))
-                :args (list '(:name "path" :type "string" :description "The path to the folder." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'folder_create
-                :description "Create a new folder"
-                :category "filesystem"
-                :function (lambda (path) (make-directory path t) "Folder created.")
-                :args (list '(:name "path" :type "string" :description "The path of the folder to create." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'file_find
-                :description "Find file(s) matching a pattern"
-                :category "filesystem"
-                :function (lambda (pattern &optional path) (directory-files-recursively (or path default-directory) pattern))
-                :args (list '(:name "pattern" :type "string" :description "The regex pattern to search for." :required t)
-                        '(:name "path" :type "string" :description "The directory to search in."))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'file_read
-                :description "Read the contents of one or more files"
-                :category "filesystem"
-                :function (lambda (paths) (mapcar (lambda (f) (cons f (with-temp-buffer (insert-file-contents f) (buffer-string)))) paths))
-                :args (list '(:name "paths" :type "array" :items "string" :description "A list of file paths to read." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'file_write
-                :description "Write contents to a file (overwrite if exists)"
-                :category "filesystem"
-                :function (lambda (path content) (with-temp-file path (insert content)) "File written.")
-                :args (list '(:name "path" :type "string" :description "The path of the file to write to." :required t)
-                        '(:name "content" :type "string" :description "The content to write to the file." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'file_delete
-                :description "Delete a file"
-                :category "filesystem"
-                :function (lambda (path) (delete-file path) "File deleted.")
-                :args (list '(:name "path" :type "string" :description "The path of the file to delete." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'text_search
-                :description "Search for a text pattern in files"
-                :category "filesystem"
-                :function (lambda (pattern &optional path)
-                            (let ((results nil))
-                              (dolist (file (directory-files-recursively (or path default-directory) ".*"))
-                                (with-temp-buffer
-                                  (insert-file-contents file)
-                                  (goto-char (point-min))
-                                  (when (re-search-forward pattern nil t)
-                                    (push file results))))
-                              results))
-                :args (list '(:name "pattern" :type "string" :description "The regex pattern to search for." :required t)
-                        '(:name "path" :type "string" :description "The directory to search in."))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'text_edit
-                :description "Edit a text file by replacing a pattern"
-                :category "filesystem"
-                :function (lambda (path pattern replacement)
-                            (with-temp-buffer
-                              (insert-file-contents path)
-                              (goto-char (point-min))
-                              (while (re-search-forward pattern nil t)
-                                (replace-match replacement))
-                              (write-region (point-min) (point-max) path))
-                            "Text replaced.")
-                :args (list '(:name "path" :type "string" :description "The path of the file to edit." :required t)
-                        '(:name "pattern" :type "string" :description "The regex pattern to replace." :required t)
-                        '(:name "replacement" :type "string" :description "The replacement text." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'web_search
-                :description "Search the web for a query"
-                :category "web"
-                :function (lambda (query) (concat "Pretend web search results for: " query))
-                :args (list '(:name "query" :type "string" :description "The web search query." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'web_summarise_url
-                :description "Summarize the content from a web URL"
-                :category "web"
-                :function (lambda (url) (concat "Pretend summary of URL: " url))
-                :args (list '(:name "url" :type "string" :description "The URL to summarize." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'shell_command
-                :description "Execute a shell command and return stdout, stderr, and exit code"
-                :category "shell"
-                :function (lambda (command)
-                            (with-temp-buffer
-                              (let ((exit-code (call-process-shell-command command nil (current-buffer) t)))
-                                (list
-                                 (cons "stdout/stderr" (buffer-string))
-                                 (cons "exit-code" exit-code)))))
-                :args (list '(:name "command" :type "string" :description "The shell command to execute." :required t))))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'buffer_read
-                :description "Read the entire contents of the current buffer."
-                :category "emacs"
-                :function (lambda () (buffer-string))
-                :args nil))
-
-  (add-to-list 'gptel-tools
-               (gptel-make-tool
-                :name 'buffer_modify
-                :description "Modify the current buffer by replacing the active region, or inserting at point if no region is active, with the provided text."
-                :category "emacs"
-                :function (lambda (content)
-                            (if (use-region-p)
-                                (progn
-                                  (delete-region (region-beginning) (region-end))
-                                  (insert content)
-                                  "Replaced active region with new text.")
-                              (insert content)
-                              "Inserted text at point.")))
-                :args (list '(:name "content" :type "string" :description "The content to insert or replace with." :required t))))
+  (setq gptel-tools
+        (list
+         (gptel-make-tool
+          :name "folder_read"
+          :description "List all files and subfolders in a folder"
+          :category "filesystem"
+          :function (lambda (path) (directory-files path t))
+          :args (list '(:name "path" :type 'string :description "The path to the folder.")))
+         (gptel-make-tool
+          :name "folder_create"
+          :description "Create a new folder"
+          :category "filesystem"
+          :function (lambda (path) (make-directory path t) "Folder created.")
+          :args (list '(:name "path" :type 'string :description "The path of the folder to create.")))
+         (gptel-make-tool
+          :name "file_find"
+          :description "Find file(s) matching a pattern"
+          :category "filesystem"
+          :function (lambda (pattern &optional path) (directory-files-recursively (or path default-directory) pattern))
+          :args (list '(:name "pattern" :type 'string :description "The regex pattern to search for.")
+                  '(:name "path" :type 'string :description "The directory to search in.")))
+         (gptel-make-tool
+          :name "file_read"
+          :description "Read the contents of one or more files"
+          :category "filesystem"
+          :function (lambda (paths) (mapcar (lambda (f) (cons f (with-temp-buffer (insert-file-contents f) (buffer-string)))) paths))
+          :args (list '(:name "paths" :type 'array :items "string" :description "A list of file paths to read.")))
+         (gptel-make-tool
+          :name "file_write"
+          :description "Write contents to a file (overwrite if exists)"
+          :category "filesystem"
+          :function (lambda (path content) (with-temp-file path (insert content)) "File written.")
+          :args (list '(:name "path" :type 'string :description "The path of the file to write to.")
+                  '(:name "content" :type 'string :description "The content to write to the file.")))
+         (gptel-make-tool
+          :name "file_delete"
+          :description "Delete a file"
+          :category "filesystem"
+          :function (lambda (path) (delete-file path) "File deleted.")
+          :args (list '(:name "path" :type 'string :description "The path of the file to delete.")))
+         (gptel-make-tool
+          :name "text_search"
+          :description "Search for a text pattern in files"
+          :category "filesystem"
+          :function (lambda (pattern &optional path)
+                      (let ((results nil))
+                        (dolist (file (directory-files-recursively (or path default-directory) ".*"))
+                          (with-temp-buffer
+                            (insert-file-contents file)
+                            (goto-char (point-min))
+                            (when (re-search-forward pattern nil t)
+                              (push file results))))
+                        results))
+          :args (list '(:name "pattern" :type 'string :description "The regex pattern to search for.")
+                  '(:name "path" :type 'string :description "The directory to search in.")))
+         (gptel-make-tool
+          :name "text_edit"
+          :description "Edit a text file by replacing a pattern"
+          :category "filesystem"
+          :function (lambda (path pattern replacement)
+                      (with-temp-buffer
+                        (insert-file-contents path)
+                        (goto-char (point-min))
+                        (while (re-search-forward pattern nil t)
+                          (replace-match replacement))
+                        (write-region (point-min) (point-max) path))
+                      "Text replaced.")
+          :args (list '(:name "path" :type 'string :description "The path of the file to edit.")
+                  '(:name "pattern" :type 'string :description "The regex pattern to replace.")
+                  '(:name "replacement" :type 'string :description "The replacement text.")))
+         (gptel-make-tool
+          :name "web_search"
+          :description "Search the web for a query"
+          :category "web"
+          :function (lambda (query) (concat "Pretend web search results for: " query))
+          :args (list '(:name "query" :type 'string :description "The web search query.")))
+         (gptel-make-tool
+          :name "web_summarise_url"
+          :description "Summarize the content from a web URL"
+          :category "web"
+          :function (lambda (url) (concat "Pretend summary of URL: " url))
+          :args (list '(:name "url" :type 'string :description "The URL to summarize.")))
+         (gptel-make-tool
+          :name "shell_command"
+          :description "Execute a shell command and return stdout, stderr, and exit code"
+          :category "shell"
+          :function (lambda (command)
+                      (with-temp-buffer
+                        (let ((exit-code (call-process-shell-command command nil (current-buffer) t)))
+                          (list
+                           (cons "stdout/stderr" (buffer-string))
+                           (cons "exit-code" exit-code)))))
+          :args (list '(:name "command" :type 'string :description "The shell command to execute.")))
+         (gptel-make-tool
+          :name "buffer_read"
+          :description "Read the entire contents of the current buffer."
+          :category "emacs"
+          :function (lambda () (buffer-string))
+          :args nil)
+         (gptel-make-tool
+          :name "buffer_modify"
+          :description "Modify the current buffer by replacing the active region, or inserting at point if no region is active, with the provided text."
+          :category "emacs"
+          :function (lambda (content)
+                      (if (use-region-p)
+                          (progn
+                            (delete-region (region-beginning) (region-end))
+                            (insert content)
+                            "Replaced active region with new text.")
+                        (insert content)
+                        "Inserted text at point.")))
+          :args (list '(:name "content" :type 'string :description "The content to insert or replace with.")))))
 
   ;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
   ;; Architect: Systems and scalability expert
