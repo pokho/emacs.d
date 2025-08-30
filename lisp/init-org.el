@@ -56,11 +56,11 @@
 
 
 ;; Ensure pdf-tools is loaded
-(require 'pdf-tools)
-(pdf-tools-install) ;; This compiles the native backend for pdf-tools
+(require-package 'pdf-tools)
+(pdf-tools-install t) ;; This compiles the native backend for pdf-tools
 
 ;; Ensure org-pdftools is loaded and set up the hook
-(require 'org-pdftools)
+(require-package 'org-pdftools)
 (add-hook 'pdf-view-mode 'org-pdftools-setup-link)
 
 ;; Prioritize pdf-view-mode for PDF files

@@ -110,5 +110,24 @@ BUFFER and ALIST are as for `display-buffer-full-frame'."
       (browse-url (concat "file://" file-name)))))
 
 
+(defun restart-emacs ()
+  "Restart Emacs.
+This saves the session, kills the current Emacs process, and starts a new one."
+  (interactive)
+  (if (daemonp)
+      (message "Cannot restart a running Emacs daemon.")
+    (let ((emacs-binary (car command-line-args))
+          (emacs-args (cdr command-line-args-left)))
+      (message "Restarting Emacs with command: %s %s" emacs-binary emacs-args)
+      (start-process "restart-emacs" nil emacs-binary emacs-args)
+      (kill-emacs))))
+
+(defun pokho/org-roam-capture-from-anywhere ()
+  "Create a new org-roam capture, raising the Emacs frame."
+  (interactive)
+  (select-frame-set-input-focus (car (frame-list)))
+  (org-roam-capture))
+
+
 (provide 'init-utils)
 ;;; init-utils.el ends here
