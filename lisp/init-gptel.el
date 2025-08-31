@@ -221,15 +221,20 @@
 
 
   ;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
+;;; Undefined backends have been mapped to defined ones as follows:
+;;; Sequential -> Gemini
+;;; Context7   -> Groq
+;;; Magic      -> OpenRouter
+;;; Playwright -> NovitaAI
   ;; Architect: Systems and scalability expert
   (gptel-make-preset 'architect
     :description "Systems architect: Designs for long-term maintainability, scalability, and modularity. Analyzes whole-system impacts and dependencies."
     :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
     :keywords '("architecture" "design" "scalability" "modularity" "dependency")
     :quality '("maintainability" "scalability" "modularity")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :avoid-backends '("Magic")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
+    :avoid-backends '("OpenRouter")
     :tools '("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
     )
 
@@ -239,8 +244,8 @@
     :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
     :keywords '("component" "responsive" "accessibility" "ui" "design system")
     :quality '("usability" "accessibility" "performance")
-    :backend "Magic"
-    :secondary-backends '("Playwright")
+    :backend "OpenRouter"
+    :secondary-backends '("NovitaAI")
     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
     )
 
@@ -250,9 +255,9 @@
     :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
     :keywords '("API" "database" "service" "reliability" "backend" "security")
     :quality '("reliability" "security" "data integrity")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
-    :avoid-backends '("Magic")
+    :backend "Groq"
+    :secondary-backends '("Gemini")
+    :avoid-backends '("OpenRouter")
     :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -262,8 +267,8 @@
     :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
     :keywords '("analyze" "investigate" "root cause" "debug" "evidence" "troubleshoot")
     :quality '("evidence-based" "systematic" "thoroughness")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
     :tools '("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -273,9 +278,9 @@
     :system "You are a security and compliance specialist. Prioritize security, enforce compliance, and implement layered defenses. Document and justify all security decisions."
     :keywords '("vulnerability" "threat" "compliance" "security" "authorization" "authentication")
     :quality '("security" "compliance" "transparency")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
-    :avoid-backends '("Magic")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
+    :avoid-backends '("OpenRouter")
     :tools '("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -285,8 +290,8 @@
     :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor advice to the learner’s goals and understanding."
     :keywords '("explain" "learn" "understand" "guide" "teach")
     :quality '("clarity" "completeness" "engagement")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
+    :backend "Groq"
+    :secondary-backends '("Gemini")
     :tools '("file_read" "buffer_read" "web_search" "web_summarise_url")
     )
 
@@ -296,8 +301,8 @@
     :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt."
     :keywords '("refactor" "cleanup" "technical debt" "maintainability" "simplicity")
     :quality '("readability" "simplicity" "consistency")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
     )
 
@@ -307,8 +312,8 @@
     :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
     :keywords '("optimize" "performance" "bottleneck" "speed" "efficiency")
     :quality '("measurement-based" "user-focused" "systematic")
-    :backend "Playwright"
-    :secondary-backends '("Sequential")
+    :backend "NovitaAI"
+    :secondary-backends '("Gemini")
     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -318,8 +323,8 @@
     :system "You are a QA/testing expert. Focus on defect prevention, comprehensive edge case coverage, and risk-based testing strategies."
     :keywords '("test" "quality" "validation" "edge case" "qa")
     :quality '("comprehensive" "risk-based" "preventive")
-    :backend "Playwright"
-    :secondary-backends '("Sequential")
+    :backend "NovitaAI"
+    :secondary-backends '("Gemini")
     :tools '("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -329,8 +334,8 @@
     :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability."
     :keywords '("deploy" "infrastructure" "automation" "monitoring" "observability")
     :quality '("automation" "observability" "reliability")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
     :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
     )
 
@@ -340,19 +345,19 @@
     :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
     :keywords '("document" "write" "guide" "localization" "communication" "docs")
     :quality '("clarity" "cultural sensitivity" "professional excellence")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
+    :backend "Groq"
+    :secondary-backends '("Gemini")
     :tools '("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
     )
 
   ;; Business Leader: CEO/CFO/COO
   (gptel-make-preset 'business-lead
-    :description "Executive leader (CEO/CFO/COO): Strategic, financial, high-level direction. Focuses on growth, risk, and overall business health."
-    :system "You are a business leader (CEO, CFO, COO). Prioritize strategic vision, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals."
-    :keywords '("strategy" "finance" "growth" "risk" "investment" "roadmap" "KPI")
+    :description "Executive leader (CEO/CFO/COO/CTO): Strategic, financial, high-level direction. Focuses on growth, risk, and overall business health."
+    :system "You are a business leader (CEO, CFO, COO, CTO). Prioritize strategic vision, product/service innovation, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals."
+    :keywords '("strategy" "finance" "growth" "innovation" "research" "risk" "investment" "roadmap" "KPI")
     :quality '("strategic thinking" "clarity" "risk management")
-    :backend "Context7"
-    :secondary-backends '("Sequential")
+    :backend "Groq"
+    :secondary-backends '("Gemini")
     :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
     )
 
@@ -362,8 +367,8 @@
     :system "You are a customer-facing specialist in branding, marketing, or sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
     :keywords '("branding" "marketing" "campaign" "sales" "customer" "engagement" "conversion")
     :quality '("audience focus" "persuasion" "brand consistency")
-    :backend "Magic"
-    :secondary-backends '("Context7")
+    :backend "OpenRouter"
+    :secondary-backends '("Groq")
     :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
     )
 
@@ -373,8 +378,8 @@
     :system "You are an organisational specialist for legal, board, or partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
     :keywords '("legal" "compliance" "policy" "contract" "board" "governance" "partnership" "alliance")
     :quality '("compliance" "clarity" "risk mitigation")
-    :backend "Sequential"
-    :secondary-backends '("Context7")
+    :backend "Gemini"
+    :secondary-backends '("Groq")
     :tools '("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
     )
 
