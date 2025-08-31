@@ -118,8 +118,8 @@ This saves the session, kills the current Emacs process, and starts a new one."
       (message "Cannot restart a running Emacs daemon.")
     (let ((emacs-binary (car command-line-args))
           (emacs-args (cdr command-line-args-left)))
-      (message "Restarting Emacs with command: %s %s" emacs-binary emacs-args)
-      (start-process "restart-emacs" nil emacs-binary emacs-args)
+      (message "Restarting Emacs with command: setsid %s %s" emacs-binary emacs-args)
+      (apply 'start-process "restart-emacs" nil "setsid" (cons emacs-binary emacs-args))
       (kill-emacs))))
 
 (defun pokho/org-roam-capture-from-anywhere ()
