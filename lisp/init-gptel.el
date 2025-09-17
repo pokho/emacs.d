@@ -228,129 +228,129 @@
   ;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
   ;; Architect: Systems and scalability expert
   (gptel-make-preset 'architect
-    :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-sky-alpha
-    :stream t
-    :tools '("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
+                     :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
+                     :backend "OpenRouter"
+                     :model 'openrouter/sonoma-sky-alpha
+                     :stream t
+                     :tools '("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
+                     )
 
   ;; Frontend: UX and accessibility specialist
   (gptel-make-preset 'frontend
-    :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
-    :backend "OpenRouter"
-    :model 'z-ai/glm-4.5-air:free
-    :stream t
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-    )
+                     :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
+                     :backend "OpenRouter"
+                     :model 'z-ai/glm-4.5-air:free
+                     :stream t
+                     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
+                     )
 
   ;; Backend: Reliability and security engineer
   (gptel-make-preset 'backend
-    :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
-    :backend "Groq"
-    :model 'moonshotai/kimi-k2-instruct
-    :stream t
-    :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
+                     :backend "Groq"
+                     :model 'moonshotai/kimi-k2-instruct
+                     :stream t
+                     :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; Analyzer: Evidence-based root cause specialist
   (gptel-make-preset 'analyzer
-    :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
-    :backend "Gemini"
-    :model 'gemini-2.5-pro
-    :stream t
-    :tools '("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
+                     :backend "Gemini"
+                     :model 'gemini-2.5-pro
+                     :stream t
+                     :tools '("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; Security: Threat, compliance, and vulnerability specialist
   (gptel-make-preset 'security
-    :system "You are a security and compliance specialist. Prioritize security, assess threats/vulnerabilities, enforce compliance, and implement layered defenses. Document and justify all security decisions."
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools '("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a security and compliance specialist. Prioritize security, assess threats/vulnerabilities, enforce compliance, and implement layered defenses. Document and justify all security decisions."
+                     :backend "OpenRouter"
+                     :model 'deepseek/deepseek-r1-0528:free
+                     :stream t
+                     :tools '("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; Mentor: Knowledge transfer and education
   (gptel-make-preset 'mentor
-    :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor communication to the learner’s goals and understanding in a Socratic style."
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools '("file_read" "buffer_read" "web_search" "web_summarise_url")
-    )
+                     :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor communication to the learner’s goals and understanding in a Socratic style."
+                     :backend "OpenRouter"
+                     :model 'deepseek/deepseek-r1-0528:free
+                     :stream t
+                     :tools '("file_read" "buffer_read" "web_search" "web_summarise_url")
+                     )
 
   ;; Refactorer: Code quality and debt manager
   (gptel-make-preset 'refactorer
-    :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt by refactoring and cleanup."
-    :backend "Gemini"
-    :model 'gemini-2.5-flash
-    :stream t
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
+                     :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt by refactoring and cleanup."
+                     :backend "OpenRouter"
+                     :model 'moonshotai/kimi-k2:free
+                     :stream t
+                     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
+                     )
 
   ;; Performance: Optimization and bottleneck expert
   (gptel-make-preset 'performance
-    :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
-    :backend "Gemini"
-    :model 'gemini-2.5-flash
-    :stream t
-    :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
+                     :backend "Gemini"
+                     :model 'gemini-2.5-flash
+                     :stream t
+                     :tools '("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; QA: Testing, validation, and edge case detective
   (gptel-make-preset 'qa
-    :system "You are a QA/testing expert. Focus on BDD acceptance testing, maximal statement coverage, and risk-based testing strategies that validates key user and business requirements."
-    :backend "Gemini"
-    :model 'gemini-2.5-pro
-    :stream t
-    :tools '("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a QA/testing expert. Focus on BDD acceptance testing, maximal statement coverage, and risk-based testing strategies that validates key user and business requirements."
+                     :backend "Gemini"
+                     :model 'gemini-2.5-pro
+                     :stream t
+                     :tools '("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; DevOps: Infrastructure, automation, and deployment
   (gptel-make-preset 'devops
-    :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability. Prefer tools like python, Ansible, Nix, or pure bash shell scripts with proper secrets management."
-    :backend "OpenRouter"
-    :model 'qwen/qwen3-coder:free
-    :stream t
-    :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
+                     :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability. Prefer tools like python, Ansible, Nix, or pure bash shell scripts with proper secrets management."
+                     :backend "OpenRouter"
+                     :model 'moonshotai/kimi-k2:free
+                     :stream t
+                     :tools '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
+                     )
 
   ;; Scribe: Professional technical writer and localization
   (gptel-make-preset 'scribe
-    :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-dusk-alpha
-    :stream t
-    :tools '("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-    )
+                     :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
+                     :backend "OpenRouter"
+                     :model 'openrouter/sonoma-dusk-alpha
+                     :stream t
+                     :tools '("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
+                     )
 
   ;; Business Leader: CEO/CFO/COO/CTO
   (gptel-make-preset 'csuite
-    :system "You are a C-suite business leader (CEO, CFO, COO, CTO). Prioritize strategic vision, product/service innovation, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals."
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
+                     :system '("You are a C-suite business leader (CEO, CFO, COO, CTO). Prioritize strategic vision, product/service innovation, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals.")
+                     :backend "OpenRouter"
+                     :model 'deepseek/deepseek-r1-0528:free
+                     :stream t
+                     :tools nil ;;  '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+                     )
 
   ;; Customer-Facing: Branding, Marketing, Sales
   (gptel-make-preset 'brand
-    :system "You are a customer-facing specialist in branding, marketing, and sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-dusk-alpha
-    :stream t
-    :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
+                     :system "You are a customer-facing specialist in branding, marketing, and sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
+                     :backend "OpenRouter"
+                     :model 'openrouter/sonoma-dusk-alpha
+                     :stream t
+                     :tools '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+                     )
 
   ;; Organisational: Legal, Board, Partnership/Alliance
   (gptel-make-preset 'legal
-    :system "You are an organisational specialist for legal, board, and partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-sky-alpha
-    :stream t
-    :tools '("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
+                     :system "You are an organisational specialist for legal, board, and partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
+                     :backend "OpenRouter"
+                     :model 'openrouter/sonoma-sky-alpha
+                     :stream t
+                     :tools '("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
+                     )
 
 
 

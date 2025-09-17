@@ -43,6 +43,9 @@
 
 (add-hook 'after-init-hook 'transient-mark-mode)
 
+(add-hook 'after-init-hook 'global-visual-line-mode)
+
+
 
 
 ;; Huge files
@@ -84,11 +87,9 @@
 
 
 
-(when (fboundp 'display-line-numbers-mode)
+(when (fboundp 'global-display-line-numbers-mode)
   (setq-default display-line-numbers-width 3)
-  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
-  (add-hook 'yaml-mode-hook 'display-line-numbers-mode)
-  (add-hook 'yaml-ts-mode-hook 'display-line-numbers-mode))
+  (add-hook 'after-init-hook 'global-display-line-numbers-mode))
 
 
 
@@ -265,4 +266,15 @@ ORIG is the advised function, which is called with its ARGS."
 
 
 (provide 'init-editing-utils)
+
+
+;; Disable line numbers and wrapping in specific modes
+(defun sanityinc/disable-wrapping-and-line-numbers ()
+  "Turn off visual-line-mode and display-line-numbers-mode."
+  (visual-line-mode -1)
+  (display-line-numbers-mode -1))
+
+(add-hook 'eww-mode-hook #'sanityinc/disable-wrapping-and-line-numbers)
+(add-hook 'message-mode-hook #'sanityinc/disable-wrapping-and-line-numbers)
+
 ;;; init-editing-utils.el ends here
