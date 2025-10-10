@@ -83,6 +83,7 @@
 (require 'init-mmm)
 
 (require 'init-editing-utils)
+(require 'init-evil)
 (require 'init-whitespace)
 
 (require 'init-vc)
