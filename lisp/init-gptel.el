@@ -43,13 +43,14 @@
     :models '(z-ai/glm-4.5-air:free       ;https://openrouter.ai/models?max_price=0&order=top-weekly
               deepseek/deepseek-chat-v3.1:free
               moonshotai/kimi-k2:free
-              qwen/qwen3-coder:free
+              qwen/qwen3-coder:free ;; 262k context
               openrouter/sonoma-sky-alpha
               openrouter/sonoma-dusk-alpha
-              deepseek/deepseek-r1-0528:free
+              tngtech/deepseek-r1t2-chimera:free ;; 164k context
               openai/gpt-3.5-turbo
               meta-llama/codellama-34b-instruct
               codellama/codellama-70b-instruct
+              google/gemini-2.0-flash-exp:free ;; 1M context
               ))
 
   (gptel-make-openai "NovitaAI"
@@ -57,11 +58,11 @@
     :endpoint "/v3/openai"
     :key gptel-api-key
     :stream t
-    :models '(zai-org/glm-4.5
-              moonshotai/kimi-k2-instruct
-              gryphe/mythomax-l2-13b
-              meta-llama/llama-3-70b-instruct
-              meta-llama/llama-3.1-70b-instruct))
+    :models '(deepseek/deepseek-ocr
+              zai-org/glm-4.6
+              moonshotai/kimi-k2-0905
+              deepseek/deepseek-v3.1
+              qwen/qwen3-vl-235b-a22b-instruct))
 
   (gptel-make-openai "Moonshot"
     :host "api.moonshot.cn" ;; or "api.moonshot.ai" for the global site
@@ -355,21 +356,22 @@
 
 
 
+  (setq gptel-backend (gptel-make-openai "NovitaAI")))
 
-  (setq gptel-model   'z-ai/glm-4.5-air:free
-        gptel-backend
-        (gptel-make-openai "OpenRouter" ;Any name you want
-          :host "openrouter.ai"
-          :endpoint "/api/v1/chat/completions"
-          :stream t
-          :key gptel-api-key
-          :models '(z-ai/glm-4.5-air:free
-                    openai/gpt-3.5-turbo
-                    mistralai/mixtral-8x7b-instruct
-                    meta-llama/codellama-34b-instruct
-                    codellama/codellama-70b-instruct
-                    google/palm-2-codechat-bison-32k
-                    google/gemini-pro))))
+;; (setq gptel-model   'z-ai/glm-4.5-air:free
+;;       gptel-backend
+;;       (gptel-make-openai "OpenRouter" ;Any name you want
+;;         :host "openrouter.ai"
+;;         :endpoint "/api/v1/chat/completions"
+;;         :stream t
+;;         :key gptel-api-key
+;;         :models '(z-ai/glm-4.5-air:free
+;;                   openai/gpt-3.5-turbo
+;;                   mistralai/mixtral-8x7b-instruct
+;;                   meta-llama/codellama-34b-instruct
+;;                   codellama/codellama-70b-instruct
+;;                   google/palm-2-codechat-bison-32k
+;;                   google/gemini-pro))))
 
-
+(setq gptel-log-level 'debug)
 (provide 'init-gptel)
