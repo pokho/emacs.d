@@ -106,6 +106,32 @@ config remains compatible with the latest package and Emacs versions.
 *Please note that I cannot provide support for customised versions of
 this configuration.*
 
+## Universal Capture System
+
+This configuration includes a system-wide org-roam capture solution that allows you to capture content from web browsers, PDFs, and spreadsheets directly into org-roam notes.
+
+### Features
+- **System-wide capture**: Works from any application via `Ctrl+Alt+O`
+- **Auto-detection**: Browser tab title and URL detection
+- **Multiple sources**: Web pages, PDFs (Okular/Evince), spreadsheets (LibreOffice)
+- **Rich metadata**: Captures source information, timestamps, and context
+- **Extensible framework**: Easy to add new capture types
+
+### Quick Setup
+
+1. **Configure KDE shortcut**:
+   - System Settings → Shortcuts → Custom Shortcuts
+   - Add command: `/home/pokho/.emacs.d/browser-capture.sh`
+   - Set trigger: `Ctrl+Alt+O`
+
+2. **Usage**:
+   - Select text in any application
+   - Press `Ctrl+Alt+O`
+   - Emacs opens with org-roam capture node
+
+### Documentation
+See `README-CAPTURE.md` for complete documentation and extension guide.
+
 ## Support / issues
 
 If you hit any problems, please first ensure that you are using the latest version

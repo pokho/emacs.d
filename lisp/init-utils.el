@@ -128,6 +128,75 @@ This saves the session, kills the current Emacs process, and starts a new one."
   (select-frame-set-input-focus (car (frame-list)))
   (org-roam-capture))
 
+(defun pokho/org-roam-universal-capture (type title source selected-text &optional extra-info)
+  "Universal capture function for different source types.
+TYPE can be 'web, 'pdf, 'spreadsheet, 'text, etc.
+TITLE is the capture title.
+SOURCE is the URL, file path, or other source identifier.
+SELECTED-TEXT is any selected content.
+EXTRA-INFO is an optional alist with additional metadata."
+  (interactive)
+  (select-frame-set-input-focus (car (frame-list)))
+  (let* ((capture-key (cond ((eq type 'web) "w")
+                           ((eq type 'pdf) "p")
+                           ((eq type 'spreadsheet) "s")
+                           (t "d")))
+         (template (case capture-key
+                    ("w" '("web" plain
+                           "* [[%?url][%?title]]\n\n%?selected\n\n%?"
+                           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                              "#+title: ${title}\n#+source: %^{url}\n#+captured: %U\n\n")
+                           :unnarrowed t))
+                    ("p" '("pdf" plain
+                           "* PDF: %?title\n* Source: %?source\n\n%?selected\n\n%?"
+                           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                              "#+title: ${title}\n#+source: %^{source}\n#+type: PDF\n#+captured: %U\n\n")
+                           :unnarrowed t))
+                    ("s" '("spreadsheet" plain
+                           "* Spreadsheet: %?title\n* Source: %?source\n\n%?selected\n\n%?"
+                           :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                              "#+title: ${title}\n#+source: %^{source}\n#+type: Spreadsheet\n#+captured: %U\n\n")
+                           :unnarrowed t))
+                    (t '("default" plain
+                         "* %?title\n\n%?selected\n\n%?"
+                         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                            "#+title: ${title}\n#+source: %^{source}\n#+captured: %U\n\n")
+                         :unnarrowed t))))
+         (org-roam-capture-templates
+          (append org-roam-capture-templates
+                  (list (append template (list :keys capture-key))))))
+    (org-roam-capture-
+     :node (org-roam-node-create :title (or title (format "%s Capture" (capitalize (symbol-name type)))))
+     :info (append extra-info
+                   (list :source source :title title :selected selected-text :type type))
+     :goto nil
+     :prompt nil
+     :keys capture-key)))
+
+(defun pokho/org-roam-browser-capture (title url selected-text)
+  "Create a new org-roam capture with browser information.
+TITLE is the browser tab title, URL is the page URL, and SELECTED-TEXT
+is any text selected in the browser."
+  (interactive)
+  (pokho/org-roam-universal-capture 'web title url selected-text `(:url ,url)))
+
+(defun pokho/org-roam-pdf-capture (title file-path selected-text &optional page)
+  "Create a new org-roam capture from PDF.
+TITLE is the document title, FILE-PATH is the PDF location,
+SELECTED-TEXT is highlighted text, PAGE is optional page number."
+  (interactive)
+  (pokho/org-roam-universal-capture 'pdf title file-path selected-text
+                                   (when page `(:page ,page))))
+
+(defun pokho/org-roam-spreadsheet-capture (title file-path selected-text &optional sheet cell)
+  "Create a new org-roam capture from spreadsheet.
+TITLE is the document title, FILE-PATH is the file location,
+SELECTED-TEXT is cell content, SHEET and CELL are optional identifiers."
+  (interactive)
+  (pokho/org-roam-universal-capture 'spreadsheet title file-path selected-text
+                                   (append (when sheet `(:sheet ,sheet))
+                                           (when cell `(:cell ,cell)))))
+
 
 (provide 'init-utils)
 ;;; init-utils.el ends here
