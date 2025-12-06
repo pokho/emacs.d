@@ -4,8 +4,27 @@
 
 ;; save a list of open files in ~/.emacs.d/.emacs.desktop
 (setq desktop-path (list user-emacs-directory)
-      desktop-auto-save-timeout 600)
+      desktop-auto-save-timeout 600
+      desktop-load-locked-desktop t) ; Automatically use locked desktop without asking
 (desktop-save-mode 1)
+
+;; Clean up stale desktop lock file on startup
+(defun clean-stale-desktop-lock ()
+  "Remove stale desktop lock file if the process is no longer running."
+  (let ((lock-file (expand-file-name ".emacs.desktop.lock" user-emacs-directory)))
+    (when (file-exists-p lock-file)
+      (condition-case err
+          (let ((lock-pid (with-temp-buffer
+                            (insert-file-contents lock-file)
+                            (string-to-number (buffer-string)))))
+            (unless (and (numberp lock-pid) (> lock-pid 0) (process-running-p lock-pid))
+              (delete-file lock-file)
+              (message "Removed stale desktop lock file (PID %s)" lock-pid)))
+        (error
+         (message "Error cleaning desktop lock file: %s. Removing it anyway." (error-message-string err))
+         (delete-file lock-file))))))
+
+(add-hook 'emacs-startup-hook 'clean-stale-desktop-lock)
 
 (defun sanityinc/desktop-time-restore (orig &rest args)
   (let ((start-time (current-time)))

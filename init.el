@@ -25,6 +25,9 @@
 ;; Adjust garbage collection threshold for early startup (see use of gcmh below)
 (setq gc-cons-threshold (* 128 1024 1024))
 
+;; Suppress tree-sitter warnings for missing language grammars
+(setq warning-suppress-types '((treesit)))
+
 
 ;; Process performance tuning
 

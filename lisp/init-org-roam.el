@@ -31,11 +31,13 @@
 (with-eval-after-load 'org-roam
   ;; md-roam support
   (add-to-list 'org-roam-file-extensions "md")
-  (cl-defmethod org-roam-node-file-title ((node org-roam-node))
-    "Return the TITLE of a node."
-    (if (string-equal "md" (file-name-extension (org-roam-node-file node)))
-        (org-roam-get-keyword "title" (org-roam-node-properties node))
-      (org-roam-get-keyword "TITLE" (org-roam-node-properties node))))
+  ;; Only define the method if it doesn't already exist
+  (unless (cl-find-method #'org-roam-node-file-title nil (list (find-class 'org-roam-node)))
+    (cl-defmethod org-roam-node-file-title ((node org-roam-node))
+      "Return the TITLE of a node."
+      (if (string-equal "md" (file-name-extension (org-roam-node-file node)))
+          (org-roam-get-keyword "title" (org-roam-node-properties node))
+        (org-roam-get-keyword "TITLE" (org-roam-node-properties node)))))
   (cl-defmethod org-roam-node-read-title ((node org-roam-node))
     (if (string-equal "md" (file-name-extension (org-roam-node-file node)))
         (org-roam-get-keyword "title" (org-roam-node-properties node))

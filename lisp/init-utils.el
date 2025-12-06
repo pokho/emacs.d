@@ -141,7 +141,7 @@ EXTRA-INFO is an optional alist with additional metadata."
                            ((eq type 'pdf) "p")
                            ((eq type 'spreadsheet) "s")
                            (t "d")))
-         (template (case capture-key
+         (template (pcase capture-key
                     ("w" '("web" plain
                            "* [[%?url][%?title]]\n\n%?selected\n\n%?"
                            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
@@ -157,14 +157,14 @@ EXTRA-INFO is an optional alist with additional metadata."
                            :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
                                               "#+title: ${title}\n#+source: %^{source}\n#+type: Spreadsheet\n#+captured: %U\n\n")
                            :unnarrowed t))
-                    (t '("default" plain
-                         "* %?title\n\n%?selected\n\n%?"
-                         :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
-                                            "#+title: ${title}\n#+source: %^{source}\n#+captured: %U\n\n")
-                         :unnarrowed t))))
-         (org-roam-capture-templates
+                    (_ '("default" plain
+                        "* %?title\n\n%?selected\n\n%?"
+                        :if-new (file+head "%<%Y%m%d%H%M%S>-${slug}.org"
+                                           "#+title: ${title}\n#+source: %^{source}\n#+captured: %U\n\n")
+                        :unnarrowed t)))))
+    (setq org-roam-capture-templates
           (append org-roam-capture-templates
-                  (list (append template (list :keys capture-key))))))
+                  (list (append template (list :keys capture-key)))))
     (org-roam-capture-
      :node (org-roam-node-create :title (or title (format "%s Capture" (capitalize (symbol-name type)))))
      :info (append extra-info
@@ -197,6 +197,31 @@ SELECTED-TEXT is cell content, SHEET and CELL are optional identifiers."
                                    (append (when sheet `(:sheet ,sheet))
                                            (when cell `(:cell ,cell)))))
 
+
+;; System-wide org-protocol configuration
+(require 'org-protocol)
+(require 'server)
+
+;; Ensure server is started for org-protocol to work
+(unless (server-running-p)
+  (server-start))
+
+;; Add org-protocol handlers for system-wide capture
+(add-to-list 'org-protocol-protocol-alist
+             '("org-capture" :protocol "org-capture" :function org-protocol-capture))
+
+;; Enhanced org-protocol capture handler that integrates with org-roam
+(defun org-protocol-capture-web (info)
+  "Handle org-protocol capture for web content via org-roam."
+  (let ((title (plist-get info :title))
+        (url (plist-get info :url))
+        (selected (plist-get info :body)))
+    (pokho/org-roam-browser-capture (or title "Web Capture") url (or selected "")))
+  nil)
+
+;; Register the enhanced handler
+(add-to-list 'org-protocol-protocol-alist
+             '("org-roam-web" :protocol "org-roam-web" :function org-protocol-capture-web))
 
 (provide 'init-utils)
 ;;; init-utils.el ends here

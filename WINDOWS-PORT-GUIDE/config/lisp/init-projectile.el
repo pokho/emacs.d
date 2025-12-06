@@ -14,6 +14,7 @@
     (let ((rg-paths '("C:/Program Files/ripgrep/rg.exe"
                      "C:/ProgramData/chocolatey/bin/rg.exe"
                      "C:/msys64/mingw64/bin/rg.exe"
+                     "%USERPROFILE%/Documents/ripgrep/rg.exe"
                      "rg.exe")))
       (dolist (path rg-paths)
         (when (file-exists-p path)

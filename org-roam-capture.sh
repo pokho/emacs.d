@@ -1,61 +1,50 @@
 #!/bin/bash
 
-# Universal org-roam capture script
-# Usage: ./org-roam-capture.sh TYPE "TITLE" "SOURCE" "SELECTED_TEXT" [EXTRA_INFO]
-# TYPE: web, pdf, spreadsheet, default
-# EXTRA_INFO: optional metadata (e.g., "page=42" or "sheet=Sheet1,cell=A1")
+# org-roam capture script - simplified version
+# Usage: ./org-roam-capture.sh "TITLE" "URL" "SELECTED_TEXT"
 
-TYPE="${1:-web}"
-TITLE="$2"
-SOURCE="$3"
-SELECTED_TEXT="$4"
-EXTRA_INFO="$5"
+TITLE="$1"
+URL="$2"
+SELECTED_TEXT="$3"
 
-# Create temporary elisp script
-ELISP_SCRIPT=$(mktemp --suffix=.el)
+if [ -z "$TITLE" ]; then
+    TITLE="Capture from $(date)"
+fi
 
-# Escape strings for elisp
-escape_elisp_string() {
-    local str="$1"
-    # Replace backslashes first, then quotes
-    str="${str//\\/\\\\}"
-    str="${str//\"/\\\"}"
-    echo "$str"
-}
+# Create a simple temp file with content
+CONTENT_FILE="/tmp/org-roam-capture-$(date +%s).org"
 
-# Parse extra info into elisp alist
-parse_extra_info() {
-    local info="$1"
-    if [ -z "$info" ]; then
-        echo "nil"
-        return
-    fi
+# Build the org file content
+cat > "$CONTENT_FILE" << EOF
+#+title: $TITLE
+#+source: $URL
+#+captured: $(date)
 
-    echo "'("
-    IFS=',' read -ra PAIRS <<< "$info"
-    for pair in "${PAIRS[@]}"; do
-        IFS='=' read -ra KEY_VAL <<< "$pair"
-        if [ ${#KEY_VAL[@]} -eq 2 ]; then
-            echo " :${KEY_VAL[0]} \"$(escape_elisp_string "${KEY_VAL[1]}")\""
-        fi
-    done
-    echo ")"
-}
-
-TITLE_ESCAPED=$(escape_elisp_string "$TITLE")
-SOURCE_ESCAPED=$(escape_elisp_string "$SOURCE")
-SELECTED_ESCAPED=$(escape_elisp_string "$SELECTED_TEXT")
-EXTRA_PARSED=$(parse_extra_info "$EXTRA_INFO")
-
-# Generate elisp to run the capture
-cat > "$ELISP_SCRIPT" << EOF
-(progn
-  (load-file "$HOME/.emacs.d/init.el")
-  (pokho/org-roam-universal-capture '$TYPE "$TITLE_ESCAPED" "$SOURCE_ESCAPED" "$SELECTED_ESCAPED" $EXTRA_PARSED))
 EOF
 
-# Launch Emacs with the capture function
-emacs --eval "(load-file \"$ELISP_SCRIPT\")"
+# Add selected text if provided
+if [ -n "$SELECTED_TEXT" ] && [ "$SELECTED_TEXT" != "" ]; then
+    echo -e "* Selected Text\n\n$SELECTED_TEXT\n" >> "$CONTENT_FILE"
+fi
 
-# Clean up
-rm -f "$ELISP_SCRIPT"
+# Get a unique filename in org-roam directory
+TIMESTAMP=$(date +%Y%m%d%H%M%S)
+SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+ROAM_FILE="$HOME/org/roam/${TIMESTAMP}-${SLUG}.org"
+
+# Move the temp file to org-roam directory
+mv "$CONTENT_FILE" "$ROAM_FILE"
+
+# Open the file in Emacs
+if emacsclient --eval "(message 'test')" 2>/dev/null; then
+    # Use emacsclient if daemon is running
+    emacsclient -n "$ROAM_FILE" 2>/dev/null &
+else
+    # Start new emacs if no daemon
+    emacs "$ROAM_FILE" &
+fi
+
+# Clean up temp file if it still exists
+rm -f "$CONTENT_FILE"
+
+exit 0

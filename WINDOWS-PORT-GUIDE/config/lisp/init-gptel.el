@@ -16,24 +16,11 @@
   ;; machine api.anthropic.com login gptel password <YOUR_ANTHROPIC_API_KEY>
   ;; machine generativelanguage.googleapis.com login gptel password <YOUR_GOOGLE_API_KEY>
   ;; machine api.x.ai login gptel password <YOUR_XAI_API_KEY>
-  ;; machine api.moonshot.cn login gptel password <YOUR_MOONSHOT_API_KEY>
   ;; machine openrouter.ai login gptel password <YOUR_OPENROUTER_API_KEY>
-  ;; machine api.novita.ai login gptel password <YOUR_NOVITA_API_KEY>
   ;;
   ;; After adding these, reload your auth source or restart Emacs.
 
 
-  (gptel-make-gemini "Gemini" :stream t :key gptel-api-key)
-
-  (gptel-make-openai "Groq"               ;Any name you want
-    :host "api.groq.com"
-    :endpoint "/openai/v1/chat/completions"
-    :stream t
-    :key gptel-api-key                   ;can be a function that returns the key
-    :models '(moonshotai/kimi-k2-instruct
-              llama-3.3-70b-versatile
-              llama-3.1-8b-instant
-              gemma-7b-it))
 
   (gptel-make-openai "OpenRouter"
     :host "openrouter.ai"
@@ -55,38 +42,8 @@
               x-ai/grok-code-fast-1
               ))
 
-  (gptel-make-openai "Moonshot"
-    :host "api.moonshot.cn" ;; or "api.moonshot.ai" for the global site
-    :endpoint "/v1/openai"
-    :key gptel-api-key
-    :stream t ;; optionally enable streaming
-    :models '(kimi-latest kimi-k2-0711-preview kimi-k2-turbo-preview))
-
-
-  ;; ;; AI/ML API offers an OpenAI compatible API. Enterprise-grade uptime
-  ;; (gptel-make-openai "AI/ML API"          ;Any name you want
-  ;;   :host "api.aimlapi.com"
-  ;;   :endpoint "/v1/chat/completions"
-  ;;   :stream t
-  ;;   :key gptel-api-key           ;can be a function that returns the key
-  ;;   :models '(deepseek-chat gemini-pro gpt-4o))
 
   ;; (gptel-make-anthropic "Claude" :stream t :key gptel-api-key)
-
-  ;; (gptel-make-kagi "Kagi" :key gptel-api-key) ;; Streaming and multi-turn not supported
-
-  ;; (gptel-make-openai "TogetherAI"         ;Any name you want
-  ;;   :host "api.together.xyz"
-  ;;   :key gptel-api-key                   ;can be a function that returns the key
-  ;;   :stream t
-  ;;   :models '(;; has many more, check together.ai
-  ;;             mistralai/Mixtral-8x7B-Instruct-v0.1
-  ;;             codellama/CodeLlama-13b-Instruct-hf
-  ;;             codellama/CodeLlama-34b-Instruct-hf))
-
-  ;; (gptel-make-perplexity "Perplexity"     ;Any name you want
-  ;;   :key gptel-api-key          ;can be a function that returns the key
-  ;;   :stream t)                            ;If you want responses to be streamed
 
   ;; (gptel-make-ollama "Ollama"             ;Any name of your choosing
   ;;   :host "localhost:11434"               ;Where it's running
@@ -216,138 +173,6 @@
                         "Inserted text at point."))
           :args (list '(:name "content" :type 'string :description "The content to insert or replace with.")))
          ))
-
-
-
-  ;; Create @presets from SuperClaude (or https://github.com/f/awesome-chatgpt-prompts)
-  ;; Architect: Systems and scalability expert
-  (gptel-make-preset 'architect
-    :system "You are a systems architect. Prioritize long-term maintainability, scalability, and modularity. Analyze the impact of changes across the system, minimize coupling, and ensure future-proof designs."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-sky-alpha
-    :stream t
-    :tools nil ;;'("folder_read" "file_find" "file_read" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
-
-  ;; Frontend: UX and accessibility specialist
-  (gptel-make-preset 'frontend
-    :system "You are a frontend and UX specialist. Prioritize user experience, accessibility, and real-world performance. Ensure WCAG compliance and optimize for all devices and networks."
-    :backend "OpenRouter"
-    :model 'z-ai/glm-4.5-air:free
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-    )
-
-  ;; Backend: Reliability and security engineer
-  (gptel-make-preset 'backend
-    :system "You are a backend specialist. Prioritize reliability, security, and data integrity. Design robust, fault-tolerant APIs and backend systems."
-    :backend "Groq"
-    :model 'moonshotai/kimi-k2-instruct
-    :stream t
-    :tools nil ;;'("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; Analyzer: Evidence-based root cause specialist
-  (gptel-make-preset 'analyzer
-    :system "You are a systematic analyst. Base conclusions on verifiable evidence, follow structured investigation, and identify true root causes before recommending solutions."
-    :backend "Gemini"
-    :model 'gemini-2.5-pro
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; Security: Threat, compliance, and vulnerability specialist
-  (gptel-make-preset 'security
-    :system "You are a security and compliance specialist. Prioritize security, assess threats/vulnerabilities, enforce compliance, and implement layered defenses. Document and justify all security decisions."
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools nil ;;'("folder_read" "file_read" "file_write" "file_delete" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; Mentor: Knowledge transfer and education
-  (gptel-make-preset 'mentor
-    :system "You are a mentor and educator. Focus on clear explanations and knowledge transfer. Tailor communication to the learner's goals and understanding in a Socratic style."
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools nil ;;'("file_read" "buffer_read" "web_search" "web_summarise_url")
-    )
-
-  ;; Refactorer: Code quality and debt manager
-  (gptel-make-preset 'refactorer
-    :system "You are a code quality specialist. Prioritize simplicity, maintainability, and readability. Systematically address technical debt by refactoring and cleanup."
-    :backend "OpenRouter"
-    :model 'moonshotai/kimi-k2:free
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify")
-    )
-
-  ;; Performance: Optimization and bottleneck expert
-  (gptel-make-preset 'performance
-    :system "You are a performance specialist. Always measure before optimizing. Focus on critical bottlenecks and user experience. Validate all optimizations with metrics."
-    :backend "Gemini"
-    :model 'gemini-2.5-flash
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "file_write" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; QA: Testing, validation, and edge case detective
-  (gptel-make-preset 'qa
-    :system "You are a QA/testing expert. Focus on BDD acceptance testing, maximal statement coverage, and risk-based testing strategies that validates key user and business requirements."
-    :backend "Gemini"
-    :model 'gemini-2.5-pro
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "file_write" "text_search" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; DevOps: Infrastructure, automation, and deployment
-  (gptel-make-preset 'devops
-    :system "You are a DevOps and infrastructure expert. Automate everything, ensure observability, and design for reliability and scalability. Prefer tools like python, Ansible, Nix, or pure shell scripts with proper secrets management."
-    :backend "OpenRouter"
-    :model 'moonshotai/kimi-k2:free
-    :stream t
-    :tools nil ;; '("folder_read" "folder_create" "file_find" "file_read" "file_write" "file_delete" "text_search" "text_edit" "buffer_read" "buffer_modify" "shell_command")
-    )
-
-  ;; Scribe: Professional technical writer and localization
-  (gptel-make-preset 'scribe
-    :system "You are a professional writer and documentation specialist. Prioritize clarity, cultural sensitivity, and audience needs. Create high-quality, localized technical documentation."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-dusk-alpha
-    :stream t
-    :tools nil ;;'("file_find" "file_read" "file_write" "buffer_read" "buffer_modify" "web_search" "web_summarise_url")
-    )
-
-  ;; Business Leader: CEO/CFO/COO/CTO
-  (gptel-make-preset 'csuite
-    :system '("You are a C-suite business leader (CEO, CFO, COO, CTO). Prioritize strategic vision, product/service innovation, financial health, risk management, and sustainable growth. Communicate clearly, analyze business data, and align recommendations with organizational goals.")
-    :backend "OpenRouter"
-    :model 'deepseek/deepseek-r1-0528:free
-    :stream t
-    :tools nil ;;  '("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
-
-  ;; Customer-Facing: Branding, Marketing, Sales
-  (gptel-make-preset 'marketeer
-    :system "You are a customer-facing specialist in branding, marketing, and sales. Prioritize audience understanding, clear communication, persuasive messaging, and brand consistency. Support campaign planning and sales enablement."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-dusk-alpha
-    :stream t
-    :tools nil ;;'("file_read" "file_write" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
-
-  ;; Organisational: Legal, Board, Partnership/Alliance
-  (gptel-make-preset 'legal
-    :system "You are an organisational specialist for legal, board, and partnership matters. Prioritize compliance, governance, contract clarity, and risk mitigation. Communicate formally and document all decisions."
-    :backend "OpenRouter"
-    :model 'openrouter/sonoma-sky-alpha
-    :stream t
-    :tools nil ;;'("file_read" "file_write" "file_delete" "web_search" "web_summarise_url" "buffer_read" "buffer_modify")
-    )
-
-
-
 
   ;; (setq gptel-backend (gptel-make-openai "OpenRouter"))
 
