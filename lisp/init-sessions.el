@@ -17,7 +17,12 @@
           (let ((lock-pid (with-temp-buffer
                             (insert-file-contents lock-file)
                             (string-to-number (buffer-string)))))
-            (unless (and (numberp lock-pid) (> lock-pid 0) (process-running-p lock-pid))
+            (unless (and (numberp lock-pid) (> lock-pid 0)
+                         (if (fboundp 'process-running-p)
+                             (process-running-p lock-pid)
+                           ;; For newer Emacs versions, check if process exists
+                           (let ((proc (ignore-errors (list-processes))))
+                             (not (member lock-pid (mapcar (lambda (p) (process-id p)) proc))))))
               (delete-file lock-file)
               (message "Removed stale desktop lock file (PID %s)" lock-pid)))
         (error

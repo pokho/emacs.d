@@ -1,11 +1,12 @@
 #!/bin/bash
 
 # org-roam capture script - simplified version
-# Usage: ./org-roam-capture.sh "TITLE" "URL" "SELECTED_TEXT"
+# Usage: ./org-roam-capture.sh "TYPE" "TITLE" "URL" "SELECTED_TEXT"
 
-TITLE="$1"
-URL="$2"
-SELECTED_TEXT="$3"
+TYPE="$1"
+TITLE="$2"
+URL="$3"
+SELECTED_TEXT="$4"
 
 if [ -z "$TITLE" ]; then
     TITLE="Capture from $(date)"
@@ -22,9 +23,13 @@ cat > "$CONTENT_FILE" << EOF
 
 EOF
 
-# Add selected text if provided
+# Add selected text if provided (trim whitespace first)
 if [ -n "$SELECTED_TEXT" ] && [ "$SELECTED_TEXT" != "" ]; then
-    echo -e "* Selected Text\n\n$SELECTED_TEXT\n" >> "$CONTENT_FILE"
+    # Remove leading/trailing whitespace and check if there's actual content
+    TRIMMED_TEXT=$(echo "$SELECTED_TEXT" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+    if [ -n "$TRIMMED_TEXT" ]; then
+        echo -e "* Selected Text\n\n$TRIMMED_TEXT\n" >> "$CONTENT_FILE"
+    fi
 fi
 
 # Get a unique filename in org-roam directory

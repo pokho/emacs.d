@@ -153,7 +153,17 @@ Example: Adding a capture type for code snippets:
 
 ### Browser Detection Issues
 
-If Firefox tab info isn't detected:
+**For Brave/Chrome/Edge on Wayland:**
+
+Due to Wayland security restrictions, automatic URL detection is limited. Use this workflow:
+
+1. **Copy the URL first**: Press `Ctrl+L` to focus address bar, then `Ctrl+C` to copy
+2. Select any text you want to include (optional)
+3. Press `Ctrl+Alt+O` to trigger capture
+
+The capture will use the URL from your clipboard and extract the domain name for the title.
+
+**If Firefox tab info isn't detected:**
 1. Ensure Firefox remote is enabled: Check `about:config` for `dom.ipc.enabled`
 2. Alternative: Use a browser extension that calls the capture script directly
 
