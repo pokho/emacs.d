@@ -168,7 +168,7 @@ else
         if echo "$URL_FROM_BROWSER" | grep -qE '^https?://'; then
             URL="$URL_FROM_BROWSER"
             # Title is everything except the URL
-            TITLE=$(echo "$BROWSER_INFO" | sed "s/ $URL_FROM_BROWSER$//")
+            TITLE=$(echo "$BROWSER_INFO" | sed "s| $URL_FROM_BROWSER$||")
         else
             # No URL found, use entire output as title
             TITLE="$BROWSER_INFO"
@@ -224,6 +224,7 @@ fi
 # echo "Title='$TITLE'" >> /tmp/browser-capture-debug.log
 # echo "URL='$URL'" >> /tmp/browser-capture-debug.log
 # echo "Selected='${SELECTED_TEXT:0:100}'" >> /tmp/browser-capture-debug.log
+# echo "Calling org-roam-capture.sh with: /home/pokho/.emacs.d/org-roam-capture.sh \"web\" \"$TITLE\" \"$URL\" \"$SELECTED_TEXT\"" >> /tmp/browser-capture-debug.log
 # echo "===========================" >> /tmp/browser-capture-debug.log
 
 # Launch Emacs with org-roam capture
