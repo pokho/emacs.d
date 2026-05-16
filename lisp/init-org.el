@@ -399,5 +399,14 @@ typical word processor."
       (sqlite . t)))))
 
 
+
+;;; Mind mapping with org-mind-map
+
+(when (executable-find "dot")
+  (require-package 'org-mind-map)
+  (with-eval-after-load 'org-mind-map
+    (setq org-mind-map-engine "dot")))
+
+
 (provide 'init-org)
 ;;; init-org.el ends here

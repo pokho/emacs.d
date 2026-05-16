@@ -109,5 +109,29 @@ Call a second time to restore the original window configuration."
   (add-hook 'after-init-hook (apply-partially 'windswap-default-keybindings 'shift 'control)))
 
 
+
+
+;; Tab-bar-mode: tmux-style named workspaces
+(tab-bar-mode 1)
+(setq tab-bar-new-tab-choice "*scratch*"
+      tab-bar-show 1
+      tab-bar-tab-hints t)
+
+(defun pokho/tab-bar-new-tab (name)
+  "Create a new tab with NAME."
+  (interactive "sTab name: ")
+  (tab-bar-new-tab)
+  (tab-bar-rename-tab name))
+
+(global-set-key (kbd "C-c t c") 'pokho/tab-bar-new-tab)
+(global-set-key (kbd "C-c t n") 'tab-next)
+(global-set-key (kbd "C-c t p") 'tab-previous)
+(global-set-key (kbd "C-c t r") 'tab-bar-rename-tab)
+(global-set-key (kbd "C-c t k") 'tab-close)
+(dotimes (i 10)
+  (global-set-key (kbd (format "C-c t %d" i))
+                  `(lambda () (interactive) (tab-bar-select-tab ,(1+ i)))))
+
+
 (provide 'init-windows)
 ;;; init-windows.el ends here
