@@ -2,11 +2,11 @@
 ;;; Commentary:
 ;;; Code:
 
-;; save a list of open files in ~/.emacs.d/.emacs.desktop
-(setq desktop-path (list user-emacs-directory)
-      desktop-auto-save-timeout 600
-      desktop-load-locked-desktop t) ; Automatically use locked desktop without asking
-(desktop-save-mode 1)
+;; Desktop save disabled — start fresh, use tab-bar for workspaces
+;; (setq desktop-path (list user-emacs-directory)
+;;       desktop-auto-save-timeout 600
+;;       desktop-load-locked-desktop t)
+;; (desktop-save-mode 1)
 
 ;; Clean up stale desktop lock file on startup
 (defun clean-stale-desktop-lock ()
