@@ -3,6 +3,16 @@
 # Browser capture script for org-roam
 # This script can get current browser tab information and launch org-roam capture
 
+# A title that is clearly a file path or org-roam node name, not a real page title.
+# High-precision on purpose: a legit title may contain "/" (e.g. "A/B Testing").
+# Used so a stray Emacs/org-roam window title can never become the captured note's title.
+looks_like_garbage_title() {
+    case "$1" in
+        *.org|*.org\ -\ *|*org-roam*|/*|'~'/*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
 # Function to get browser info from Firefox
 get_firefox_info() {
     # Check if Firefox is running
@@ -42,17 +52,25 @@ get_chromium_info() {
         # Method 1: Check if user has copied URL to clipboard
         url=$(get_url_from_clipboard)
 
-        # Method 2: Try to get window title
+        # Method 2: Try to get window title.
+        # Match the browser's WM_CLASS (wmctrl -lx, column 3), NOT the window title,
+        # so an Emacs buffer whose name contains "brave"/"chrome" is never mistaken for the browser.
         if [ -z "$title" ]; then
-            if command -v wmctrl >/dev/null 2>&1; then
-                # List all windows and find browser windows
-                local browser_window=$(wmctrl -l | grep -i "$browser_name" | head -1)
-                if [ -n "$browser_window" ]; then
-                    title=$(echo "$browser_window" | sed 's/^[^ ]* *[^ ]* *[^ ]* *//')
-                    # Remove browser name from title
-                    title=$(echo "$title" | sed "s/ - $browser_name$//" | sed "s/ — $browser_name$//")
-                    # Remove common patterns
-                    title=$(echo "$title" | sed 's/ - YouTube$//' | sed 's/ - Wikipedia$//')
+            local cls=""
+            case "$browser_exe" in
+                brave)            cls="brave" ;;
+                google-chrome)    cls="google-chrome|chrome" ;;
+                chromium-browser) cls="chromium" ;;
+                microsoft-edge)   cls="edge" ;;
+                *)                cls="$browser_name" ;;
+            esac
+            if command -v wmctrl >/dev/null 2>&1 && [ -n "$cls" ]; then
+                title=$(wmctrl -lx | awk -v c="$cls" 'tolower($3) ~ c {
+                    for (i=5; i<=NF; i++) printf "%s%s", $i, (i<NF ? OFS : ""); print ""
+                }' | head -1)
+                if [ -n "$title" ]; then
+                    # Strip browser name and common suffixes
+                    title=$(echo "$title" | sed "s/ - $browser_name$//; s/ — $browser_name$//; s/ - YouTube$//; s/ - Wikipedia$//")
                 fi
             fi
         fi
@@ -213,19 +231,23 @@ filter_selected_text() {
 # Filter the selected text
 SELECTED_TEXT=$(filter_selected_text "$SELECTED_TEXT")
 
-# Default values if still empty
-if [ -z "$TITLE" ]; then
+# Default values if still empty or path-like (defense against window-title mis-detection)
+if [ -z "$TITLE" ] || looks_like_garbage_title "$TITLE"; then
     TITLE="Web Capture $(date '+%Y-%m-%d %H:%M')"
 fi
 
-# Debug output (commented out)
-# echo "=== Browser Capture Debug ===" >> /tmp/browser-capture-debug.log
-# echo "SAVED_CLIPBOARD: '$SAVED_CLIPBOARD'" >> /tmp/browser-capture-debug.log
-# echo "Title='$TITLE'" >> /tmp/browser-capture-debug.log
-# echo "URL='$URL'" >> /tmp/browser-capture-debug.log
-# echo "Selected='${SELECTED_TEXT:0:100}'" >> /tmp/browser-capture-debug.log
-# echo "Calling org-roam-capture.sh with: /home/pokho/.emacs.d/org-roam-capture.sh \"web\" \"$TITLE\" \"$URL\" \"$SELECTED_TEXT\"" >> /tmp/browser-capture-debug.log
-# echo "===========================" >> /tmp/browser-capture-debug.log
+# Optional debug trace: BROWSER_CAPTURE_DEBUG=1 appends to /tmp/browser-capture-debug.log
+if [ "${BROWSER_CAPTURE_DEBUG:-0}" = "1" ]; then
+    {
+        echo "=== Browser Capture $(date) ==="
+        echo "SAVED_CLIPBOARD: '$SAVED_CLIPBOARD'"
+        echo "Title='$TITLE'"
+        echo "URL='$URL'"
+        echo "Selected='${SELECTED_TEXT:0:100}'"
+        echo "Calling: org-roam-capture.sh \"web\" \"$TITLE\" \"$URL\" \"$SELECTED_TEXT\""
+        echo "================================="
+    } >> /tmp/browser-capture-debug.log
+fi
 
 # Launch Emacs with org-roam capture
 /home/pokho/.emacs.d/org-roam-capture.sh "web" "$TITLE" "$URL" "$SELECTED_TEXT"

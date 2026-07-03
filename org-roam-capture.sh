@@ -16,8 +16,22 @@ SELECTED_TEXT="$4"
 # echo "SELECTED_TEXT: '$SELECTED_TEXT'" >> /tmp/org-roam-capture-debug.log
 # echo "=========================" >> /tmp/org-roam-capture-debug.log
 
-if [ -z "$TITLE" ]; then
-    TITLE="Capture from $(date)"
+# A title that is clearly a file path or org-roam node name, not a real page title.
+# High-precision on purpose: a legit title may contain "/" (e.g. "A/B Testing").
+looks_like_garbage_title() {
+    case "$1" in
+        *.org|*.org\ -\ *|*org-roam*|/*|'~'/*) return 0 ;;
+        *) return 1 ;;
+    esac
+}
+
+# If no usable title (empty or path-like), derive one from the URL domain or timestamp.
+if [ -z "$TITLE" ] || looks_like_garbage_title "$TITLE"; then
+    if [ -n "$URL" ] && [[ "$URL" =~ ^https?:// ]]; then
+        TITLE="Web: $(echo "$URL" | sed 's|https\?://||; s|/.*||; s|^www\.||')"
+    else
+        TITLE="Capture from $(date)"
+    fi
 fi
 
 # If no URL provided, try to get from clipboard
@@ -54,8 +68,16 @@ fi
 
 # Get a unique filename in org-roam directory
 TIMESTAMP=$(date +%Y%m%d%H%M%S)
-SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g' | sed 's/--*/-/g' | sed 's/^-//;s/-$//')
+SLUG=$(echo "$TITLE" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9]/-/g; s/--*/-/g; s/^-//; s/-$//' | cut -c1-60)
+[ -z "$SLUG" ] && SLUG="untitled"
 ROAM_FILE="$HOME/org/roam/${TIMESTAMP}-${SLUG}.org"
+
+# Never overwrite an existing note: append -2, -3, ... if the name is taken
+if [ -e "$ROAM_FILE" ]; then
+    i=2
+    while [ -e "$HOME/org/roam/${TIMESTAMP}-${SLUG}-${i}.org" ]; do i=$((i+1)); done
+    ROAM_FILE="$HOME/org/roam/${TIMESTAMP}-${SLUG}-${i}.org"
+fi
 
 # Move the temp file to org-roam directory
 mv "$CONTENT_FILE" "$ROAM_FILE"
