@@ -86,7 +86,7 @@
 (require 'init-mmm)
 
 (require 'init-editing-utils)
-(require 'init-evil)
+;; (require 'init-evil) ; disabled - not using evil/vim keybindings
 (require 'init-whitespace)
 
 (require 'init-vc)
